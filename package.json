@@ -1,0 +1,49 @@
+{
+  "name": "lkt-state",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "private": true,
+  "files": [
+    "dist/*"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/lkt-state.es.js",
+      "require": "./dist/lkt-state.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "scripts": {
+    "serve": "vite",
+    "build": "vite build && vue-tsc --emitDeclarationOnly --project tsconfig.json && mv dist/src dist/types",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test-coverage": "vitest run --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Lekrat@gitlab.com/lkt-ui/lkt-http.git"
+  },
+  "author": "Antonio Ibáñez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/lkt-ui/lkt-http/issues"
+  },
+  "homepage": "https://gitlab.com/lkt-ui/lkt-http#readme",
+  "peerDependencies": {
+    "lkt-tools": "git+https://gitlab.com/lkt-ui/lkt-tools.git"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.18.9",
+    "@types/node": "^18.0.6",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.39.0"
+  },
+  "engines": {
+    "node": ">=12"
+  }
+}

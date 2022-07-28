@@ -1,4 +1,4 @@
-import { sortObject as l, isDate as o, date as f, isObject as _, isArray as S, isNumeric as c, isFunction as D, isFilled as u, cloneString as p } from "lkt-tools";
+import { sortObject as l, isDate as o, date as f, isObject as _, isArray as S, isNumeric as c, isFunction as d, isFilled as u, cloneString as D } from "lkt-tools";
 const h = (t, a = []) => {
   if (o(t) && !isNaN(t.valueOf()))
     return f("Y-m-d H:i:s", t);
@@ -11,7 +11,7 @@ const h = (t, a = []) => {
       s !== null && e.push(s);
     }), e;
   }
-  return c(t) ? String(t) : D(t) ? null : t;
+  return c(t) ? String(t) : d(t) ? null : t;
 }, n = (t, a = []) => {
   t = JSON.parse(JSON.stringify(t)), a.length > 0 && a.forEach((i) => {
     t.hasOwnProperty(i) && delete t[i];
@@ -36,17 +36,22 @@ class r {
   }
   reset(a) {
     let e = n(a, this.removeDataProps);
-    return this.data = p(e), this.originalData = e, this;
+    return this.data = D(e), this.originalData = e, this;
   }
   hasModifications() {
     return this.data !== this.originalData;
   }
 }
-const g = {
+const p = {
   data() {
     return {
       _lkt_dataState: null
     };
+  },
+  computed: {
+    $hasModifiedDataStored() {
+      return this._lkt_dataState ? this._lkt_dataState.changed === !0 : !1;
+    }
   },
   watch: {
     "_lkt_dataState.changed"(t) {
@@ -66,10 +71,10 @@ const g = {
   }
 }, k = {
   install: (t, a) => {
-    t.mixin(g);
+    t.mixin(p);
   }
 };
 export {
-  g as DataStateMixin,
+  p as DataStateMixin,
   k as default
 };

@@ -2,6 +2,9 @@ import { ILktObject } from "lkt-tools";
 import { IDataStateMixin } from "../interfaces/IDataStateMixin";
 export declare const DataStateMixin: {
     data(): IDataStateMixin;
+    computed: {
+        $hasModifiedDataStored(): boolean;
+    };
     watch: {
         '_lkt_dataState.changed'(v: string): void;
     };

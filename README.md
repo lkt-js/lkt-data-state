@@ -15,7 +15,7 @@ npm i -S lkt-state
 In your main.js
 
 ```js
-  import LktState from 'lkt-state';
+import LktState from 'lkt-state';
 
 app.use(LktState);
 ```
@@ -79,6 +79,30 @@ export default {
         onDataChange() {
             // This call only stores 'test' property
             this.$storeDataState(this.state);
+        }
+    }
+}
+```
+
+## Computed properties
+
+### $hasModifiedDataStored boolean
+
+Controls if there are modified data.
+
+```js
+export default {
+    data() {
+        return {
+            state: {}
+        }
+    },
+    methods: {
+        save() {
+            if (!this.$hasModifiedDataStored) {
+                return;
+            }
+            // Do your stuff
         }
     }
 }

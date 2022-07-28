@@ -8,6 +8,14 @@ export const DataStateMixin = {
             _lkt_dataState: null
         }
     },
+    computed: {
+        $hasModifiedDataStored(){
+            if (!this._lkt_dataState) {
+                return false;
+            }
+            return this._lkt_dataState.changed === true;
+        }
+    },
     watch: {
         '_lkt_dataState.changed'(v: string) {
             this.$emit('data-state-changed', v);

@@ -11,6 +11,7 @@ declare namespace _default {
             const entry: string;
             const name: string;
             function fileName(format: any): string;
+            const formats: string[];
         }
         export { outDir };
         export const minify: boolean;

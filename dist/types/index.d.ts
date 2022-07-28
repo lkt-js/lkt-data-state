@@ -1,7 +1,8 @@
 import { ILktObject } from "lkt-tools";
 import { DataStateMixin } from "./mixins/DataStateMixin";
+import { App } from "vue";
 declare const LktState: {
-    install: (app: any, options: ILktObject) => void;
+    install: (app: App, options: ILktObject) => void;
 };
 export { DataStateMixin };
 export default LktState;

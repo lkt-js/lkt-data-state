@@ -1,73 +1,75 @@
-import { date as o, isObject as h, isArray as n, isNumeric as l, isFunction as p, sortObject as f } from "lkt-tools";
-class S {
+import { sortObject as l, isDate as o, date as f, isObject as _, isArray as S, isNumeric as c, isFunction as D, isFilled as u, cloneString as p } from "lkt-tools";
+const h = (t, a = []) => {
+  if (o(t) && !isNaN(t.valueOf()))
+    return f("Y-m-d H:i:s", t);
+  if (_(t))
+    return n(t, a);
+  if (S(t)) {
+    let e = [];
+    return t.forEach((i) => {
+      let s = h(i, a);
+      s !== null && e.push(s);
+    }), e;
+  }
+  return c(t) ? String(t) : D(t) ? null : t;
+}, n = (t, a = []) => {
+  t = JSON.parse(JSON.stringify(t)), a.length > 0 && a.forEach((i) => {
+    t.hasOwnProperty(i) && delete t[i];
+  });
+  let e = {};
+  for (let i in t)
+    if (t.hasOwnProperty(i) && t[i] !== null) {
+      let s = h(t[i], a);
+      s !== null && (e[i] = s);
+    }
+  return e = l(e), JSON.stringify(e);
+};
+class r {
   constructor() {
-    this.data = "", this.originalData = "", this.removeDataProps = [];
+    this.data = "", this.originalData = "", this.removeDataProps = [], this.changed = !1;
   }
-  preventStoreProps(t) {
-    return this.removeDataProps = t, this;
+  preventStoreProps(a) {
+    return this.removeDataProps = a, this;
   }
-  parseData(t) {
-    t = JSON.parse(JSON.stringify(t)), this.removeDataProps.length > 0 && this.removeDataProps.forEach((e) => {
-      t.hasOwnProperty(e) && delete t[e];
-    });
-    let a = {};
-    for (let e in t)
-      if (t.hasOwnProperty(e) && t[e] !== null)
-        if (t[e] instanceof Date)
-          isNaN(t[e].valueOf()) || (a[e] = o("Y-m-d H:i:s", t[e]));
-        else if (h(t[e]))
-          a[e] = this.parseData(t[e]);
-        else if (n(t[e])) {
-          let i = [];
-          t[e].forEach((r) => {
-            i.push(this.parseData(r));
-          }), a[e] = i;
-        } else
-          l(t[e]) ? a[e] = String(t[e]) : p(t[e]) || (a[e] = t[e]);
-    return a = f(a), JSON.stringify(a);
+  store(a) {
+    return u(this.originalData) ? (this.data = n(a, this.removeDataProps), this.changed = this.data !== this.originalData, this) : this.reset(a);
   }
-  store(t) {
-    return this.data = this.parseData(t), this;
-  }
-  reset(t) {
-    return this.data = this.parseData(t), this.originalData = this.parseData(t), this;
+  reset(a) {
+    let e = n(a, this.removeDataProps);
+    return this.data = p(e), this.originalData = e, this;
   }
   hasModifications() {
     return this.data !== this.originalData;
   }
 }
-const D = {
+const g = {
   data() {
     return {
-      _lkt_dataState: new S(),
-      _lkt_dataStateChanged: !1
+      _lkt_dataState: null
     };
   },
   watch: {
-    "_lkt_dataState.data"(s) {
-      this._lkt_dataStateChanged = this.modifiedDataController.hasModifications();
-    },
-    _lkt_dataStateChanged(s) {
-      this.$emit("data-state-changed", s);
+    "_lkt_dataState.changed"(t) {
+      this.$emit("data-state-changed", t);
     }
   },
   methods: {
-    $preventStoreProps(s) {
-      this._lkt_dataState.preventStoreProps(s);
+    $preventStoreDataProps(t) {
+      this._lkt_dataState || (this._lkt_dataState = new r()), this._lkt_dataState.preventStoreProps(t);
     },
-    $storeState(s = {}) {
-      this._lkt_dataState.store(s);
+    $storeDataState(t = {}) {
+      this._lkt_dataState || (this._lkt_dataState = new r()), this._lkt_dataState.store(t);
     },
-    $resetState(s = {}) {
-      this._lkt_dataState.reset(s);
+    $resetDataState(t = {}) {
+      this._lkt_dataState || (this._lkt_dataState = new r()), this._lkt_dataState.reset(t);
     }
   }
-}, _ = {
-  install: (s, t) => {
-    s.mixin(D);
+}, k = {
+  install: (t, a) => {
+    t.mixin(g);
   }
 };
 export {
-  D as DataStateMixin,
-  _ as default
+  g as DataStateMixin,
+  k as default
 };

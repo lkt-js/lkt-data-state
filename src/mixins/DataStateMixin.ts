@@ -5,27 +5,32 @@ import {IDataStateMixin} from "../interfaces/IDataStateMixin";
 export const DataStateMixin = {
     data(): IDataStateMixin {
         return {
-            _lkt_dataState: new DataState(),
-            _lkt_dataStateChanged: false,
+            _lkt_dataState: null
         }
     },
     watch: {
-        '_lkt_dataState.data'(v: string) {
-            this._lkt_dataStateChanged = this.modifiedDataController.hasModifications();
-        },
-        _lkt_dataStateChanged(v: string) {
+        '_lkt_dataState.changed'(v: string) {
             this.$emit('data-state-changed', v);
         },
     },
     methods: {
         $preventStoreDataProps(props: string[]) {
+            if (!this._lkt_dataState) {
+                this._lkt_dataState = new DataState();
+            }
             this._lkt_dataState.preventStoreProps(props);
         },
         $storeDataState(data: ILktObject = {}) {
+            if (!this._lkt_dataState) {
+                this._lkt_dataState = new DataState();
+            }
             this._lkt_dataState.store(data);
         },
         $resetDataState(data: ILktObject = {}) {
+            if (!this._lkt_dataState) {
+                this._lkt_dataState = new DataState();
+            }
             this._lkt_dataState.reset(data);
         }
-    }
+    },
 };

@@ -3,8 +3,8 @@ export declare class DataState {
     data: string;
     originalData: string;
     removeDataProps: string[];
+    changed: boolean;
     preventStoreProps(props: string[]): this;
-    parseData(data: ILktObject): string;
     store(data: ILktObject): this;
     reset(data: ILktObject): this;
     hasModifications(): boolean;

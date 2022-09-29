@@ -15,14 +15,16 @@ export class DataState {
   constructor(data: LktObject, config: DataStateConfig = {}) {
     this.preventProps = new PreventPropsValue(config.preventProps);
     this.preventTypes = new PreventTypesValue(config.preventTypes);
+    data = {...data};
     data = this.preventProps.clear(data);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue(data);
-    this.original = new DataValue(data);
+    this.data = new DataValue({...data});
+    this.original = new DataValue({...data});
     this.isChanged = this.changed();
   }
 
   store(data: LktObject) {
+    data = {...data};
     data = this.preventProps.clear(data);
     data = this.preventTypes.clear(data);
     this.data = new DataValue(data);

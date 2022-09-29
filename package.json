@@ -16,9 +16,10 @@
     },
     "./dist/style.css": "./dist/style.css"
   },
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "serve": "vite",
-    "build": "vite build && vue-tsc --emitDeclarationOnly --project tsconfig.json && mv dist/src dist/types",
+    "build": "vite build && vue-tsc --emitDeclarationOnly --project tsconfig.json && mv dist/src dist/types && rm -rd dist/tests && rm dist/vite.config.d.ts && rm dist/jest.config.d.ts",
     "preview": "vite preview",
     "test": "jest",
     "test-coverage": "vitest run --coverage"

@@ -1,6 +1,6 @@
 # LKT State
 
-This Vue 3 plugin allows you to manage data state and check if there are changes.
+This package allows you to manage data state and check if there are changes.
 
 ## Installation
 
@@ -10,110 +10,98 @@ This Vue 3 plugin allows you to manage data state and check if there are changes
 npm i -S lkt-state
 ```
 
-## Typical use:
+## Usage
 
-In your main.js
+### Create a data state controller
 
-```js
-import LktState from 'lkt-state';
+```ts
+import DataState from 'lkt-state';
 
-app.use(LktState);
+const data = {
+    boolProp: false,
+    lorem: 1,
+    ipsum: 2,
+    dolor: 3,
+    sit: 4,
+    amet: 5,
+    test: {
+        lorem: '1',
+        sample: '1',
+
+        test: {
+            lorem: '1',
+            sample: '32',
+        }
+    }
+};
+
+const state = new DataState(data, {
+    preventProps: ['lorem', 'ipsum'], // These props won't be stored
+    preventTypes: ['number', 'string', 'object'] // The data types won't be stored
+});
+
+// Or instantiate without additional config
+const state = new DataState(data);
 ```
 
-## Methods
+### Update with modified data
 
-One used by your app, all your components will have the following methods:
+Once you have your DataState instance you can store an update like following:
 
-### $storeDataState (data = {})
+```ts
+const updatedData = {
+    boolProp: true,
+    lorem: 1,
+    ipsum: 2,
+    dolor: 34,
+    sit: 4,
+    amet: 5,
+    test: {
+        lorem: '1',
+        sample: '1',
 
-Given an input data object (```{key: value}```), it will be stored in an internal controller.
-
-Each time you store new data with this method, it will be automatically compared with the first data input.
-
-```js
-export default {
-    data() {
-        return {
-            state: {}
+        test: {
+            lorem: '1',
+            sample: '2',
         }
+    }
+};
+
+state.store(updatedData)
+```
+
+### Check modifications
+```ts
+if (state.changed()) {
+    // Do your stuff
+}
+```
+If you want to see modifications, you can use:
+```ts
+const diff = state.differences();
+```
+In the example with `preventProps` and `preventTypes` it will output:
+
+```ts
+const diff = {
+    from: {
+      boolProp: false,
     },
-    mounted() {
-        this.$storeDataState(this.state);
-    },
-    methods: {
-        onDataChange() {
-            this.$storeDataState(this.state);
-        }
+    to: {
+      boolProp: true,
     }
 }
 ```
 
-### $resetDataState (data = {})
+## PreventTypes
 
-Similar to ```$storeDataState``` but this method sets the comparable data to check in each ```$storeDataState``` call.
+Available types to remove are:
+- string
+- number
+- undefined
+- function
+- null
+- boolean
+- object
 
-### $preventStoreDataProps(props: string[])
-
-Configure some object keys which won't be stored.
-
-Important: If there are objects inside the stored object, any of those will store this props.
-
-```js
-export default {
-    data() {
-        return {
-            state: {
-                test: 'test',
-                dontStoreMe: 'God hates me :(',
-                fn: () => 1,
-            }
-        }
-    },
-    mounted() {
-        this.$preventStoreDataProps(['dontStoreMe', 'fn']);
-
-        // This call only stores 'test' property
-        this.$storeDataState(this.state);
-    },
-    methods: {
-        onDataChange() {
-            // This call only stores 'test' property
-            this.$storeDataState(this.state);
-        }
-    }
-}
-```
-
-## Computed properties
-
-### $hasModifiedDataStored boolean
-
-Controls if there are modified data.
-
-```js
-export default {
-    data() {
-        return {
-            state: {}
-        }
-    },
-    methods: {
-        save() {
-            if (!this.$hasModifiedDataStored) {
-                return;
-            }
-            // Do your stuff
-        }
-    }
-}
-```
-
-## Events
-
-### data-state-changed
-
-Params:
-
-- `state` boolean
-    - `true` if there are modifications
-    - `false` if original data and current data are the same
+`preventTypes` option works recursively in objects

@@ -1,1 +1,1 @@
-export declare type PreventType = 'string' | 'number' | 'undefined' | 'function' | 'null' | 'boolean' | 'object';
+export declare type PreventType = 'string' | 'number' | 'undefined' | 'function' | 'null' | 'boolean' | 'object' | 'array';

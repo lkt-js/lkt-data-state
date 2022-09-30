@@ -1,8 +1,7 @@
-import { date, isDate } from 'lkt-date-tools';
-import { sortObjectProperties } from 'lkt-object-tools';
 import { LktObject } from 'lkt-ts-interfaces';
 
-import {DataDifferences} from "../types/DataDifferences";
+import { ObjectParser } from '../helpers/data-parser/ObjectParser';
+import { DataDifferences } from '../types/DataDifferences';
 
 export class DataValue {
   private readonly value: string;
@@ -12,8 +11,10 @@ export class DataValue {
     if (!value) {
       value = {};
     }
+
+    value = new ObjectParser(value).parse();
     this.data = value;
-    this.value = this.parseData(value);
+    this.value = JSON.stringify(value);
   }
 
   isDifferent(value: string) {
@@ -32,9 +33,12 @@ export class DataValue {
     return this.data;
   }
 
-
-  private fetchDifferences(original: LktObject, compared: LktObject): DataDifferences {
-    const from: LktObject = {}, to: LktObject = {};
+  private fetchDifferences(
+    original: LktObject,
+    compared: LktObject
+  ): DataDifferences {
+    const from: LktObject = {},
+      to: LktObject = {};
 
     const fromKeys = Object.keys(original);
     const toKeys = Object.keys(compared);
@@ -44,12 +48,11 @@ export class DataValue {
       return self.indexOf(value) === index;
     });
 
-    allKeys.forEach(key => {
+    allKeys.forEach((key) => {
       let a = original[key];
       let b = compared[key];
 
       if (Array.isArray(a) && Array.isArray(b)) {
-
         if (a.length === 0 && b.length === 0) {
           return;
         }
@@ -59,7 +62,7 @@ export class DataValue {
           if (b[index] !== value) {
             includeArrays = true;
           }
-        })
+        });
 
         if (includeArrays) {
           from[key] = a;
@@ -70,22 +73,19 @@ export class DataValue {
         from[key] = a;
         to[key] = b;
         return;
-
       } else if (!Array.isArray(a) && Array.isArray(b)) {
-        console.log('case c')
         from[key] = a;
         to[key] = b;
         return;
       }
 
       const isObjectA = typeof a === 'object',
-          isObjectB = typeof b === 'object';
+        isObjectB = typeof b === 'object';
 
       if (isObjectA && isObjectB) {
         const aux = this.fetchDifferences(a, b);
         a = aux.from;
         b = aux.to;
-
       } else if (isObjectA) {
         const aux = this.fetchDifferences(a, b);
         a = aux.from;
@@ -100,58 +100,6 @@ export class DataValue {
       }
     });
 
-    return {from, to};
-  }
-
-  private parseDatum(datum: any) {
-    if (isDate(datum) && !isNaN(datum.valueOf())) {
-      return date('Y-m-d H:i:s', datum);
-    }
-
-    if (Array.isArray(datum)) {
-      const tmp: any[] = [];
-      datum.forEach((z: any) => {
-        const z1 = this.parseDatum(z);
-        if (z1 !== null) {
-          tmp.push(z1);
-        }
-      });
-      return tmp;
-    }
-
-    if (typeof datum === 'object') {
-      return this.parseData(datum);
-    }
-
-    if (typeof datum === 'number') {
-      return String(datum);
-    }
-
-    if (typeof datum !== 'function') {
-      return datum;
-    }
-
-    return null;
-  }
-
-  private parseData(data: LktObject) {
-    data = JSON.parse(JSON.stringify(data));
-
-    if (!data) {
-      return JSON.stringify({});
-    }
-
-    const keys = Object.keys(data);
-
-    let r: LktObject = {};
-    keys.forEach((key) => {
-      const datum = this.parseDatum(data[key]);
-      if (datum !== null) {
-        r[key] = datum;
-      }
-    });
-
-    r = sortObjectProperties(r);
-    return JSON.stringify(r);
+    return { from, to };
   }
 }

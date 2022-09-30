@@ -1,5 +1,5 @@
 import { LktObject } from 'lkt-ts-interfaces';
-import { DataDifferences } from "../types/DataDifferences";
+import { DataDifferences } from '../types/DataDifferences';
 export declare class DataValue {
     private readonly value;
     private readonly data;
@@ -9,6 +9,4 @@ export declare class DataValue {
     getString(): string;
     getObject(): LktObject;
     private fetchDifferences;
-    private parseDatum;
-    private parseData;
 }

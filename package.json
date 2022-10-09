@@ -1,6 +1,6 @@
 {
   "name": "lkt-state",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -11,8 +11,8 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/lkt-state.es.js",
-      "require": "./dist/lkt-state.umd.js"
+      "import": "./dist/lkt-data-state.es.js",
+      "require": "./dist/lkt-data-state.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
   },

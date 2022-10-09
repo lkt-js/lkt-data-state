@@ -14,8 +14,8 @@ export default {
     build: {
         lib: {
             entry: `${ src }/index.ts`,
-            name: 'LktState',
-            fileName: (format) => `lkt-state.${ format }.js`,
+            name: 'LktDataState',
+            fileName: (format) => `lkt-data-state.${ format }.js`,
             formats: ['es']
         },
         outDir,

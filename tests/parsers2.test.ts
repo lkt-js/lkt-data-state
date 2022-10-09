@@ -18,29 +18,18 @@ const sampleData = {
       sample: '2',
     },
   },
-  testArray: [3, { a: 1, b: 2, c: true, d: [0, 1, 2] }],
+  testArray: [
+    3,
+    {
+      a: 1,
+      b: 2,
+      c: true,
+      d: [0, 1, 2, { wonder: 'yeah', mystery: [0, 1, 2, 3] }],
+    },
+  ],
 };
 
 test('ObjectParser', () => {
-  const data = {
-    lorem: 1,
-    ipsum: 2,
-    dolor: 3,
-    sit: 4,
-    amet: 5,
-    // @ts-ignore
-    amet1: null,
-    test: {
-      lorem: '1',
-      sample: '1',
-
-      test: {
-        lorem: '1',
-        sample: '2',
-      }
-    },
-    // testArray: [3, {a: 1, b: 2, c: true, d: [0, 1, 2]}]
-  };
   const expected = {
     amet: 5,
     // @ts-ignore
@@ -56,10 +45,19 @@ test('ObjectParser', () => {
       test: {
         lorem: '1',
         sample: '2',
-      }
+      },
     },
+    testArray: [
+      3,
+      {
+        a: 1,
+        b: 2,
+        c: true,
+        d: [0, 1, 2, { mystery: [0, 1, 2, 3], wonder: 'yeah' }],
+      },
+    ],
   };
-  const parser = new ObjectParser(data);
+  const parser = new ObjectParser(sampleData);
   const result = parser.parse();
   expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
 });
@@ -75,10 +73,16 @@ test('ObjectTypeFilter - no numbers', () => {
       test: {
         lorem: '1',
         sample: '2',
-      }
+      },
     },
     // @ts-ignore
-    testArray: [{c: true, d: []}]
+    testArray: [
+      {
+        c: true,
+        // @ts-ignore
+        d: [{mystery: [], wonder: 'yeah', }],
+      },
+    ],
   };
   const parser = new ObjectTypeFilter(sampleData);
   const result = parser.filter(['number']);
@@ -95,10 +99,17 @@ test('ObjectTypeFilter - no strings', () => {
     lorem: 1,
     sit: 4,
     test: {
-      test: {
-      }
+      test: {},
     },
-    testArray: [3, {a: 1, b: 2, c: true, d: [0, 1, 2]}]
+    testArray: [
+      3,
+      {
+        a: 1,
+        b: 2,
+        c: true,
+        d: [0, 1, 2, {mystery: [0, 1, 2, 3]}],
+      },
+    ],
   };
   const parser = new ObjectTypeFilter(sampleData);
   const result = parser.filter(['string']);
@@ -110,11 +121,16 @@ test('ObjectTypeFilter - no strings,numbers', () => {
     // @ts-ignore
     amet1: null,
     test: {
-      test: {
-      }
+      test: {},
     },
     // @ts-ignore
-    testArray: [{c: true, d: []}]
+    testArray: [
+      {
+        c: true,
+        // @ts-ignore
+        d: [{mystery: []}],
+      },
+    ],
   };
   const parser = new ObjectTypeFilter(sampleData);
   const result = parser.filter(['string', 'number']);
@@ -126,7 +142,7 @@ test('ObjectTypeFilter - no strings,numbers,objects', () => {
     // @ts-ignore
     amet1: null,
     // @ts-ignore
-    testArray: []
+    testArray: [],
   };
   const parser = new ObjectTypeFilter(sampleData);
   const result = parser.filter(['string', 'number', 'object']);
@@ -144,8 +160,7 @@ test('ObjectTypeFilter - no strings,numbers,objects, arrays', () => {
 });
 
 test('ObjectTypeFilter - no strings,numbers,objects, arrays, null', () => {
-  const expected = {
-  };
+  const expected = {};
   const parser = new ObjectTypeFilter(sampleData);
   const result = parser.filter(['string', 'number', 'object', 'array', 'null']);
   expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));

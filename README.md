@@ -1,4 +1,4 @@
-# LKT State
+# LKT Data State
 
 This package allows you to manage data state and check if there are changes.
 
@@ -7,7 +7,7 @@ This package allows you to manage data state and check if there are changes.
 ### With npm
 
 ```bash
-npm i -S lkt-state
+npm i -S lkt-data-state
 ```
 
 ## Usage
@@ -93,7 +93,7 @@ const diff = {
 }
 ```
 
-## PreventTypes
+## preventTypes
 
 Available types to remove are:
 - string
@@ -103,5 +103,10 @@ Available types to remove are:
 - null
 - boolean
 - object
+- array
 
 `preventTypes` option works recursively in objects
+
+## preventProps
+
+This options prevent some object properties to be stored. Works recursively.

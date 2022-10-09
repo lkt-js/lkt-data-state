@@ -1,5 +1,5 @@
 {
-  "name": "lkt-state",
+  "name": "lkt-data-state",
   "version": "1.0.6",
   "description": "",
   "main": "src/index.ts",
@@ -26,14 +26,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://Lekrat@gitlab.com/lkt-ui/lkt-state.git"
+    "url": "git+https://github.com/lekrat/lkt-data-state.git"
   },
   "author": "Antonio Ibáñez",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/lkt-ui/lkt-state/issues"
+    "url": "https://github.com/lekrat/lkt-data-state/issues"
   },
-  "homepage": "https://gitlab.com/lkt-ui/lkt-state#readme",
+  "homepage": "https://github.com/lekrat/lkt-data-state#readme",
   "devDependencies": {
     "@babel/core": "^7.13.13",
     "@babel/preset-env": "^7.13.12",

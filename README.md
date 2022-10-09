@@ -15,7 +15,7 @@ npm i -S lkt-data-state
 ### Create a data state controller
 
 ```ts
-import DataState from 'lkt-state';
+import DataState from 'lkt-data-state';
 
 const data = {
     boolProp: false,
@@ -74,22 +74,6 @@ state.store(updatedData)
 ```ts
 if (state.changed()) {
     // Do your stuff
-}
-```
-If you want to see modifications, you can use:
-```ts
-const diff = state.differences();
-```
-In the example with `preventProps` and `preventTypes` it will output:
-
-```ts
-const diff = {
-    from: {
-      boolProp: false,
-    },
-    to: {
-      boolProp: true,
-    }
 }
 ```
 

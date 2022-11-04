@@ -33,7 +33,8 @@ export class DatumParser {
         }
 
         if (typeof this.value === 'number') {
-            return Number(this.value);
+            return String(this.value);
+            // return Number(this.value);
         }
 
         if (typeof this.value === 'string') {

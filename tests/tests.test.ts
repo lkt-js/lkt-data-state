@@ -70,7 +70,7 @@ test('DataStateController', () => {
 
   const expected = {
     from: {
-      dolor: 3,
+      dolor: '3',
       test: {
         test: {
           sample: '32',
@@ -78,7 +78,7 @@ test('DataStateController', () => {
       }
     },
     to: {
-      dolor: 34,
+      dolor: '34',
       test: {
         test: {
           sample: '2',

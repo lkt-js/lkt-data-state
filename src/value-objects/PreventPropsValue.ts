@@ -11,7 +11,15 @@ export class PreventPropsValue {
     }
 
     clear(data: LktObject) {
+        if (typeof data === 'undefined' || data === null) {
+            return {};
+        }
+
         if (this.value.length === 0) {
+            return data;
+        }
+
+        if (typeof data !== 'object') {
             return data;
         }
 

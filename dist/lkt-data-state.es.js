@@ -1,42 +1,42 @@
 import { sortObjectProperties as g } from "lkt-object-tools";
-import { isDate as N, date as x } from "lkt-date-tools";
+import { isDate as x, date as I } from "lkt-date-tools";
 class P extends Error {
   constructor() {
     super(), this.name = "InvalidDatumError", this.message = "Datum not supported";
   }
 }
-class I {
-  constructor(r) {
-    Array.isArray(r) || (r = []), this.value = r;
+class N {
+  constructor(e) {
+    Array.isArray(e) || (e = []), this.value = e;
   }
   parse() {
-    const r = [];
-    return this.value.forEach((e) => {
+    const e = [];
+    return this.value.forEach((r) => {
       try {
-        r.push(new j(e).parse());
+        e.push(new j(r).parse());
       } catch {
       }
-    }), r;
+    }), e;
   }
 }
 class j {
-  constructor(r) {
-    this.value = r;
+  constructor(e) {
+    this.value = e;
   }
   parse() {
     if (this.value === null)
       return null;
-    if (N(this.value) && !isNaN(this.value.valueOf()))
-      return x("Y-m-d H:i:s", this.value);
+    if (x(this.value) && !isNaN(this.value.valueOf()))
+      return I("Y-m-d H:i:s", this.value);
     if (Array.isArray(this.value))
       try {
-        return new I(this.value).parse();
+        return new N(this.value).parse();
       } catch {
       }
     if (typeof this.value == "object")
       return new A(this.value).parse();
     if (typeof this.value == "number")
-      return Number(this.value);
+      return String(this.value);
     if (typeof this.value == "string")
       return String(this.value);
     if (typeof this.value != "function")
@@ -44,40 +44,40 @@ class j {
     throw new P();
   }
 }
-var T = Object.defineProperty, y = Object.getOwnPropertySymbols, V = Object.prototype.hasOwnProperty, F = Object.prototype.propertyIsEnumerable, O = (t, r, e) => r in t ? T(t, r, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[r] = e, C = (t, r) => {
-  for (var e in r || (r = {}))
-    V.call(r, e) && O(t, e, r[e]);
+var T = Object.defineProperty, y = Object.getOwnPropertySymbols, V = Object.prototype.hasOwnProperty, F = Object.prototype.propertyIsEnumerable, O = (t, e, r) => e in t ? T(t, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : t[e] = r, C = (t, e) => {
+  for (var r in e || (e = {}))
+    V.call(e, r) && O(t, r, e[r]);
   if (y)
-    for (var e of y(r))
-      F.call(r, e) && O(t, e, r[e]);
+    for (var r of y(e))
+      F.call(e, r) && O(t, r, e[r]);
   return t;
 };
 class A {
-  constructor(r) {
-    this.value = C({}, r);
+  constructor(e) {
+    this.value = C({}, e);
   }
   parse() {
     if (!this.value)
       return {};
-    const r = Object.keys(this.value);
-    let e = {};
-    return r.forEach((n) => {
+    const e = Object.keys(this.value);
+    let r = {};
+    return e.forEach((s) => {
       try {
-        e[n] = new j(this.value[n]).parse();
+        r[s] = new j(this.value[s]).parse();
       } catch {
       }
-    }), e = g(e), e;
+    }), r = g(r), r;
   }
 }
 class f {
-  constructor(r) {
-    r || (r = {}), r = new A(r).parse(), this.data = r, this.value = JSON.stringify(r);
+  constructor(e) {
+    e || (e = {}), e = new A(e).parse(), this.data = e, this.value = JSON.stringify(e);
   }
-  isDifferent(r) {
-    return this.value !== r;
+  isDifferent(e) {
+    return this.value !== e;
   }
-  getDifferences(r) {
-    return this.fetchDifferences(this.getObject(), r);
+  getDifferences(e) {
+    return this.fetchDifferences(this.getObject(), e);
   }
   getString() {
     return this.value;
@@ -85,53 +85,61 @@ class f {
   getObject() {
     return this.data;
   }
-  fetchDifferences(r, e) {
-    const n = {}, u = {}, h = Object.keys(r), E = Object.keys(e);
-    let c = [...h, ...E];
-    return c = c.filter((a, s, i) => i.indexOf(a) === s), c.forEach((a) => {
-      let s = r[a], i = e[a];
-      if (Array.isArray(s) && Array.isArray(i)) {
-        if (s.length === 0 && i.length === 0)
+  fetchDifferences(e, r) {
+    let s = {}, a = {};
+    if (typeof e != "object" || typeof r != "object")
+      return { from: s, to: a };
+    const h = Object.keys(e), D = Object.keys(r);
+    let c = [...h, ...D];
+    return c = c.filter((l, i, n) => n.indexOf(l) === i), c.forEach((l) => {
+      let i = e[l], n = r[l];
+      if (Array.isArray(i) && Array.isArray(n)) {
+        if (i.length === 0 && n.length === 0)
           return;
-        let l = !1;
-        s.forEach((S, $) => {
-          i[$] !== S && (l = !0);
-        }), l && (n[a] = s, u[a] = i);
+        let u = !1;
+        i.forEach((S, $) => {
+          n[$] !== S && (u = !0);
+        }), u && (s[l] = i, a[l] = n);
         return;
-      } else if (Array.isArray(s) && !Array.isArray(i)) {
-        n[a] = s, u[a] = i;
+      } else if (Array.isArray(i) && !Array.isArray(n)) {
+        s[l] = i, a[l] = n;
         return;
-      } else if (!Array.isArray(s) && Array.isArray(i)) {
-        n[a] = s, u[a] = i;
+      } else if (!Array.isArray(i) && Array.isArray(n)) {
+        s[l] = i, a[l] = n;
         return;
       }
-      const p = typeof s == "object", v = typeof i == "object";
+      const p = typeof i == "object", v = typeof n == "object";
       if (p && v) {
-        const l = this.fetchDifferences(s, i);
-        s = l.from, i = l.to;
+        const u = this.fetchDifferences(i, n);
+        i = u.from, n = u.to;
       } else
-        p ? s = this.fetchDifferences(s, i).from : v && (i = this.fetchDifferences(s, i).to);
-      s !== i && (n[a] = s, u[a] = i);
-    }), { from: n, to: u };
+        p ? i = this.fetchDifferences(i, n).from : v && (n = this.fetchDifferences(i, n).to);
+      i !== n && (s[l] = i, a[l] = n);
+    }), s = this.clearEmpties(s), a = this.clearEmpties(a), { from: s, to: a };
+  }
+  clearEmpties(e) {
+    for (const r in e)
+      !e[r] || typeof e[r] != "object" || (this.clearEmpties(e[r]), Object.keys(e[r]).length === 0 && delete e[r]);
+    return e;
   }
 }
 class K {
-  constructor(r) {
-    r || (r = []), this.value = r;
+  constructor(e) {
+    e || (e = []), this.value = e;
   }
-  clear(r) {
-    return this.value.length === 0 || Object.keys(r).forEach((e) => {
-      this.value.includes(e) && delete r[e], typeof r[e] == "object" && (r[e] = this.clear(r[e]));
-    }), r;
+  clear(e) {
+    return typeof e > "u" || e === null ? {} : (this.value.length === 0 || typeof e != "object" || Object.keys(e).forEach((r) => {
+      this.value.includes(r) && delete e[r], typeof e[r] == "object" && (e[r] = this.clear(e[r]));
+    }), e);
   }
 }
 class B {
-  constructor(r) {
-    let e;
-    r === null ? e = "null" : Array.isArray(r) ? e = "array" : (e = typeof r, e = e.toLowerCase()), this.value = e;
+  constructor(e) {
+    let r;
+    e === null ? r = "null" : Array.isArray(e) ? r = "array" : (r = typeof e, r = r.toLowerCase()), this.value = r;
   }
-  included(r) {
-    return r.includes(this.value);
+  included(e) {
+    return e.includes(this.value);
   }
   isArray() {
     return this.value === "array";
@@ -159,76 +167,76 @@ class B {
   }
 }
 class H {
-  constructor(r) {
-    this.value = r;
+  constructor(e) {
+    this.value = e;
   }
-  filter(r) {
-    const e = [];
-    return this.value.forEach((n) => {
+  filter(e) {
+    const r = [];
+    return this.value.forEach((s) => {
       try {
-        e.push(new d(n).filter(r));
+        r.push(new E(s).filter(e));
       } catch {
       }
-    }), e;
+    }), r;
   }
 }
-class d {
-  constructor(r) {
-    this.value = r, this.type = new B(r);
+class E {
+  constructor(e) {
+    this.value = e, this.type = new B(e);
   }
-  filter(r) {
-    if (this.type.included(r))
+  filter(e) {
+    if (this.type.included(e))
       throw new P();
-    return this.type.isArray() ? new H(this.value).filter(r) : this.type.isObject() ? new D(this.value).filter(r) : this.value;
+    return this.type.isArray() ? new H(this.value).filter(e) : this.type.isObject() ? new d(this.value).filter(e) : this.value;
   }
 }
-var J = Object.defineProperty, m = Object.getOwnPropertySymbols, L = Object.prototype.hasOwnProperty, U = Object.prototype.propertyIsEnumerable, w = (t, r, e) => r in t ? J(t, r, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[r] = e, Y = (t, r) => {
-  for (var e in r || (r = {}))
-    L.call(r, e) && w(t, e, r[e]);
+var J = Object.defineProperty, m = Object.getOwnPropertySymbols, L = Object.prototype.hasOwnProperty, U = Object.prototype.propertyIsEnumerable, b = (t, e, r) => e in t ? J(t, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : t[e] = r, Y = (t, e) => {
+  for (var r in e || (e = {}))
+    L.call(e, r) && b(t, r, e[r]);
   if (m)
-    for (var e of m(r))
-      U.call(r, e) && w(t, e, r[e]);
+    for (var r of m(e))
+      U.call(e, r) && b(t, r, e[r]);
   return t;
 };
-class D {
-  constructor(r) {
-    this.value = Y({}, r);
+class d {
+  constructor(e) {
+    this.value = Y({}, e);
   }
-  filter(r) {
+  filter(e) {
     if (!this.value)
       return {};
-    const e = Object.keys(this.value);
-    let n = {};
-    return e.forEach((u) => {
+    const r = Object.keys(this.value);
+    let s = {};
+    return r.forEach((a) => {
       try {
-        n[u] = new d(this.value[u]).filter(r);
+        s[a] = new E(this.value[a]).filter(e);
       } catch {
       }
-    }), n = g(n), n;
+    }), s = g(s), s;
   }
 }
 class q {
-  constructor(r) {
-    r || (r = []), this.value = r;
+  constructor(e) {
+    e || (e = []), this.value = e;
   }
-  clear(r) {
-    return this.value.length === 0 ? r : new D(r).filter(this.value);
+  clear(e) {
+    return this.value.length === 0 ? e : new d(e).filter(this.value);
   }
 }
-var z = Object.defineProperty, _ = Object.getOwnPropertySymbols, G = Object.prototype.hasOwnProperty, M = Object.prototype.propertyIsEnumerable, b = (t, r, e) => r in t ? z(t, r, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[r] = e, o = (t, r) => {
-  for (var e in r || (r = {}))
-    G.call(r, e) && b(t, e, r[e]);
-  if (_)
-    for (var e of _(r))
-      M.call(r, e) && b(t, e, r[e]);
+var z = Object.defineProperty, w = Object.getOwnPropertySymbols, G = Object.prototype.hasOwnProperty, M = Object.prototype.propertyIsEnumerable, _ = (t, e, r) => e in t ? z(t, e, { enumerable: !0, configurable: !0, writable: !0, value: r }) : t[e] = r, o = (t, e) => {
+  for (var r in e || (e = {}))
+    G.call(e, r) && _(t, r, e[r]);
+  if (w)
+    for (var r of w(e))
+      M.call(e, r) && _(t, r, e[r]);
   return t;
 };
 class W {
-  constructor(r, e = {}) {
-    this.preventProps = new K(e.preventProps), this.preventTypes = new q(e.preventTypes), r = o({}, r), r = this.preventProps.clear(r), r = this.preventTypes.clear(r), this.data = new f(o({}, r)), this.original = new f(o({}, r)), this.isChanged = this.changed();
+  constructor(e, r = {}) {
+    this.preventProps = new K(r.preventProps), this.preventTypes = new q(r.preventTypes), e = o({}, e), e = this.preventProps.clear(e), e = this.preventTypes.clear(e), this.data = new f(o({}, e)), this.original = new f(o({}, e)), this.isChanged = this.changed();
   }
-  store(r) {
-    r = o({}, r), r = this.preventProps.clear(r), r = this.preventTypes.clear(r), this.data = new f(r), this.isChanged = this.changed();
+  store(e) {
+    e = o({}, e), e = this.preventProps.clear(e), e = this.preventTypes.clear(e), this.data = new f(e), this.isChanged = this.changed();
   }
   changed() {
     return this.original.isDifferent(this.data.getString());

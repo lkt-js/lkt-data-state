@@ -36,7 +36,7 @@
     "url": "git+https://github.com/lekrat/lkt-data-state.git"
   },
   "author": "Antonio Ibáñez",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/lekrat/lkt-data-state/issues"
   },

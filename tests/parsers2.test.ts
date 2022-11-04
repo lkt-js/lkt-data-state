@@ -31,13 +31,13 @@ const sampleData = {
 
 test('ObjectParser', () => {
   const expected = {
-    amet: 5,
+    amet: "5",
     // @ts-ignore
     amet1: null,
-    dolor: 3,
-    ipsum: 2,
-    lorem: 1,
-    sit: 4,
+    dolor: "3",
+    ipsum: "2",
+    lorem: "1",
+    sit: "4",
     test: {
       lorem: '1',
       sample: '1',
@@ -48,12 +48,12 @@ test('ObjectParser', () => {
       },
     },
     testArray: [
-      3,
+      '3',
       {
-        a: 1,
-        b: 2,
+        a: '1',
+        b: '2',
         c: true,
-        d: [0, 1, 2, { mystery: [0, 1, 2, 3], wonder: 'yeah' }],
+        d: ['0', '1', '2', { mystery: ['0', '1', '2', '3'], wonder: 'yeah' }],
       },
     ],
   };

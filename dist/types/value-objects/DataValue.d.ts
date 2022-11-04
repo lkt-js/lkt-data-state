@@ -9,4 +9,5 @@ export declare class DataValue {
     getString(): string;
     getObject(): LktObject;
     private fetchDifferences;
+    clearEmpties(o: LktObject): LktObject;
 }

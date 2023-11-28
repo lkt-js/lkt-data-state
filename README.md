@@ -1,6 +1,5 @@
 ![ts](https://img.shields.io/badge/Typescript-3178c6?style=for-the-badge)
 ![js](https://img.shields.io/badge/Javascript-f68333?style=for-the-badge)
-![jest](https://img.shields.io/badge/Tested%20with%20Jest-15c213?style=for-the-badge)
 ![framework independent](https://img.shields.io/badge/Framework%20independent-d4d4d4?style=for-the-badge)
 ![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Flekrat%2Flkt-data-state%2Fmaster%2Fpackage.json&query=%24.engines.node&style=for-the-badge&label=node&color=026e00)
 

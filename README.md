@@ -1,18 +1,22 @@
-# LKT Data State
+![ts](https://img.shields.io/badge/Typescript-3178c6?style=for-the-badge)
+![js](https://img.shields.io/badge/Javascript-f68333?style=for-the-badge)
+![jest](https://img.shields.io/badge/Tested%20with%20Jest-15c213?style=for-the-badge)
+![framework independent](https://img.shields.io/badge/Framework%20independent-d4d4d4?style=for-the-badge)
+![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Flekrat%2Flkt-data-state%2Fmaster%2Fpackage.json&query=%24.engines.node&style=for-the-badge&label=node&color=026e00)
 
 This package allows you to manage data state and check if there are changes.
 
-## Installation
+# Installation
 
-### With npm
+Using npm
 
 ```bash
 npm i -S lkt-data-state
 ```
 
-## Usage
+# Usage
 
-### Create a data state controller
+## Create a data state controller
 
 ```ts
 import DataState from 'lkt-data-state';
@@ -37,14 +41,14 @@ const data = {
 
 const state = new DataState(data, {
     preventProps: ['lorem', 'ipsum'], // These props won't be stored
-    preventTypes: ['number', 'string', 'object'] // The data types won't be stored
+    preventTypes: ['number', 'string', 'object'] // These data types won't be stored
 });
 
 // Or instantiate without additional config
 const state = new DataState(data);
 ```
 
-### Update with modified data
+## Update with modified data
 
 Once you have your DataState instance you can store an update like following:
 
@@ -70,14 +74,37 @@ const updatedData = {
 state.store(updatedData)
 ```
 
-### Check modifications
+## Partial increment
+
+Sometimes you just want to modify one property. In that case, you don't need to use all the object, you can use the `increment` method this way:
+
+```ts
+state.increment({lorem: 2})
+```
+
+## Check modifications
 ```ts
 if (state.changed()) {
     // Do your stuff
 }
 ```
 
-## preventTypes
+## Get data
+
+```ts
+state.getData(); // Returns modified data
+state.getOriginalData(); // Returns original data
+```
+
+Keep in mind returned data will cast integer to string.
+
+## Turn stored data into original data
+
+```ts
+state.turnStoredIntoOriginal();
+```
+
+# preventTypes
 
 Available types to remove are:
 - string
@@ -91,6 +118,6 @@ Available types to remove are:
 
 `preventTypes` option works recursively in objects
 
-## preventProps
+# preventProps
 
-This options prevent some object properties to be stored. Works recursively.
+This options prevent some object properties to be stored. Works recursively in objects.

@@ -1,6 +1,6 @@
 {
   "name": "lkt-data-state",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -74,7 +74,7 @@
     "vue-tsc": "^0.38.9"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   },
   "dependencies": {
     "lkt-control-tools": "^1.0.1",

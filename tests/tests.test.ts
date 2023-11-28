@@ -1,3 +1,5 @@
+import {sortObjectProperties} from "lkt-object-tools";
+
 import {DataState} from "../src/instances/DataState";
 import { PreventPropsValue } from '../src/value-objects/PreventPropsValue';
 
@@ -202,4 +204,148 @@ test('DataStateController - preventTypes with array of objects', () => {
   state.store(data2);
   expect(state.changed()).toEqual(true);
   expect(JSON.stringify(state.differences())).toEqual(JSON.stringify(expected));
+});
+
+test('DataStateController - get data works', () => {
+  const data = {
+    boolProp: false,
+    lorem: 1,
+    ipsum: 2,
+    dolor: 3,
+    sit: 4,
+    amet: 5,
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '32',
+      }
+    },
+    testArray: [3, {a: 1, b: 2, c: true, d: [0, 1, 2]}
+    ]
+  };
+  const data2 = {
+    boolProp: true,
+    lorem: '1',
+    ipsum: '2',
+    dolor: '34',
+    sit: '4',
+    amet: '5',
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '2',
+      }
+    },
+    testArray: ['4', {a: '1', b: '2', c: false, d: ['0', '1', '3']}
+    ]
+  };
+
+  const expected = sortObjectProperties(data2);
+
+  const state = new DataState(data);
+  state.store(data2);
+  expect(state.changed()).toEqual(true);
+  expect(JSON.stringify(state.getData())).toEqual(JSON.stringify(expected));
+});
+
+test('DataStateController - increment data', () => {
+  const data = {
+    boolProp: false,
+    lorem: 1,
+    ipsum: 2,
+    dolor: 3,
+    sit: 4,
+    amet: 5,
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '32',
+      }
+    },
+    testArray: [3, {a: 1, b: 2, c: true, d: [0, 1, 2]}
+    ]
+  };
+  const data2 = {
+    boolProp: false,
+    lorem: '2',
+    ipsum: '2',
+    dolor: '3',
+    sit: '4',
+    amet: '5',
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '32',
+      }
+    },
+    testArray: ['3', {a: '1', b: '2', c: true, d: ['0', '1', '2']}
+    ]
+  };
+
+  const expected = sortObjectProperties(data2);
+
+  const state = new DataState(data);
+  state.increment({lorem: '2'});
+  expect(state.changed()).toEqual(true);
+  expect(JSON.stringify(state.getData())).toEqual(JSON.stringify(expected));
+});
+
+test('DataStateController - turn data into original', () => {
+  const data = {
+    boolProp: false,
+    lorem: 1,
+    ipsum: 2,
+    dolor: 3,
+    sit: 4,
+    amet: 5,
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '32',
+      }
+    },
+    testArray: [3, {a: 1, b: 2, c: true, d: [0, 1, 2]}
+    ]
+  };
+  const data2 = {
+    boolProp: false,
+    lorem: '2',
+    ipsum: '2',
+    dolor: '3',
+    sit: '4',
+    amet: '5',
+    test: {
+      lorem: '1',
+      sample: '1',
+
+      test: {
+        lorem: '1',
+        sample: '32',
+      }
+    },
+    testArray: ['4', {a: '1', b: '2', c: true, d: ['0', '1', '2']}
+    ]
+  };
+
+  const expected = sortObjectProperties(data2);
+
+  const state = new DataState(data);
+  state.increment({lorem: '2', testArray: ['4', {a: '1', b: '2', c: true, d: ['0', '1', '2']}]}).turnStoredIntoOriginal();
+  expect(state.changed()).toEqual(false);
+  expect(JSON.stringify(state.getData())).toEqual(JSON.stringify(expected));
 });

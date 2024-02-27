@@ -1,5 +1,5 @@
 import { LktObject } from "lkt-ts-interfaces";
-export declare type DataDifferences = {
+export type DataDifferences = {
     from: LktObject;
     to: LktObject;
 };

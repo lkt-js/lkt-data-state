@@ -1,5 +1,5 @@
 import { PreventType } from "./PreventType";
-export declare type DataStateConfig = {
+export type DataStateConfig = {
     preventProps?: string[];
     preventTypes?: PreventType[];
 };

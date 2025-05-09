@@ -7,16 +7,22 @@ type DataDifferences = {
 
 type PreventType = 'string' | 'number' | 'undefined' | 'function' | 'null' | 'boolean' | 'object' | 'array';
 
-type DataStateConfig = {
+interface DataStateConfig {
+    onlyProps?: string[];
     preventProps?: string[];
     preventTypes?: PreventType[];
-};
+    recursiveOnlyProps?: boolean;
+    recursivePreventProps?: boolean;
+}
 
 declare class DataState {
     private data;
     private original;
+    private readonly onlyProps;
     private readonly preventProps;
     private readonly preventTypes;
+    private readonly recursiveOnlyProps;
+    private readonly recursivePreventProps;
     isChanged: boolean;
     constructor(data: LktObject, config?: DataStateConfig);
     store(data: LktObject): this;
@@ -24,6 +30,7 @@ declare class DataState {
     turnStoredIntoOriginal(): this;
     changed(): boolean;
     differences(): DataDifferences;
+    getChangedProperties(): string[];
     getData(): LktObject;
     getOriginalData(): LktObject;
 }

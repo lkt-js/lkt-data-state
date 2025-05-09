@@ -1,6 +1,9 @@
 import {PreventType} from "./PreventType";
 
-export type DataStateConfig = {
-  preventProps?: string[];
-  preventTypes?: PreventType[];
-};
+export interface DataStateConfig {
+  onlyProps?: string[]
+  preventProps?: string[]
+  preventTypes?: PreventType[]
+  recursiveOnlyProps?: boolean
+  recursivePreventProps?: boolean
+}

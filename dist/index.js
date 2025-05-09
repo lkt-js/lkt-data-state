@@ -198,7 +198,7 @@ var PreventPropsValue = class {
     }
     this.value = value;
   }
-  clear(data) {
+  clear(data, recursive = false) {
     if (typeof data === "undefined" || data === null) {
       return {};
     }
@@ -208,11 +208,19 @@ var PreventPropsValue = class {
     if (typeof data !== "object") {
       return data;
     }
+    if (Array.isArray(data)) {
+      return data.map((item) => {
+        if (typeof item === "object") {
+          return this.clear(item);
+        }
+        return item;
+      });
+    }
     Object.keys(data).forEach((key) => {
       if (this.value.includes(key)) {
         delete data[key];
       }
-      if (typeof data[key] === "object") {
+      if (recursive && typeof data[key] === "object") {
         data[key] = this.clear(data[key]);
       }
     });
@@ -347,18 +355,64 @@ var PreventTypesValue = class {
   }
 };
 
+// src/value-objects/OnlyPropsValue.ts
+var OnlyPropsValue = class {
+  value;
+  constructor(value) {
+    if (!value) {
+      value = [];
+    }
+    this.value = value;
+  }
+  clear(data, recursive = false) {
+    if (typeof data === "undefined" || data === null) {
+      return {};
+    }
+    if (this.value.length === 0) {
+      return data;
+    }
+    if (typeof data !== "object") {
+      return data;
+    }
+    if (Array.isArray(data)) {
+      return data.map((item) => {
+        if (typeof item === "object") {
+          return this.clear(item);
+        }
+        return item;
+      });
+    }
+    Object.keys(data).forEach((key) => {
+      if (!this.value.includes(key)) {
+        delete data[key];
+      }
+      if (recursive && typeof data[key] === "object") {
+        data[key] = this.clear(data[key]);
+      }
+    });
+    return data;
+  }
+};
+
 // src/instances/DataState.ts
 var DataState = class {
   data;
   original;
+  onlyProps;
   preventProps;
   preventTypes;
+  recursiveOnlyProps;
+  recursivePreventProps;
   isChanged;
   constructor(data, config = {}) {
+    this.onlyProps = new OnlyPropsValue(config.onlyProps);
     this.preventProps = new PreventPropsValue(config.preventProps);
     this.preventTypes = new PreventTypesValue(config.preventTypes);
+    this.recursiveOnlyProps = typeof config.recursiveOnlyProps === "boolean" ? config.recursiveOnlyProps : true;
+    this.recursivePreventProps = typeof config.recursivePreventProps === "boolean" ? config.recursivePreventProps : true;
     data = { ...data };
-    data = this.preventProps.clear(data);
+    data = this.onlyProps.clear(data, this.recursiveOnlyProps);
+    data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
     this.data = new DataValue({ ...data });
     this.original = new DataValue({ ...data });
@@ -366,7 +420,8 @@ var DataState = class {
   }
   store(data) {
     data = { ...data };
-    data = this.preventProps.clear(data);
+    data = this.onlyProps.clear(data, this.recursiveOnlyProps);
+    data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
     this.data = new DataValue(data);
     this.isChanged = this.changed();
@@ -374,7 +429,8 @@ var DataState = class {
   }
   increment(data) {
     data = { ...this.getData(), ...data };
-    data = this.preventProps.clear(data);
+    data = this.onlyProps.clear(data, this.recursiveOnlyProps);
+    data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
     this.data = new DataValue(data);
     this.isChanged = this.changed();
@@ -392,6 +448,13 @@ var DataState = class {
   }
   differences() {
     return this.original.getDifferences(this.data.getObject());
+  }
+  getChangedProperties() {
+    let differences = this.differences(), differencesKeys = [...Object.keys(differences.from), ...Object.keys(differences.to)];
+    function onlyUnique(value, index, array) {
+      return array.indexOf(value) === index;
+    }
+    return differencesKeys.filter(onlyUnique);
   }
   getData() {
     return this.data.getObject();

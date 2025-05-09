@@ -1,6 +1,6 @@
 import {LktObject} from "lkt-ts-interfaces";
 
-export class PreventPropsValue {
+export class OnlyPropsValue {
     private readonly value: string[];
 
     constructor(value?: string[]) {
@@ -35,7 +35,7 @@ export class PreventPropsValue {
         Object.keys(data).forEach(key => {
 
             // Remove root level
-            if (this.value.includes(key)) {
+            if (!this.value.includes(key)) {
                 delete data[key];
             }
 

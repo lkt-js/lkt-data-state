@@ -134,13 +134,8 @@ var DataValue = class {
         if (a.length === 0 && b.length === 0) {
           return;
         }
-        let includeArrays = false;
-        a.forEach((value, index) => {
-          if (b[index] !== value) {
-            includeArrays = true;
-          }
-        });
-        if (includeArrays) {
+        let filteredALength = a.filter((value) => !b.includes(value)).length, filteredBLength = b.filter((value) => !a.includes(value)).length;
+        if (filteredALength > 0 || filteredBLength > 0) {
           from[key] = a;
           to[key] = b;
         }

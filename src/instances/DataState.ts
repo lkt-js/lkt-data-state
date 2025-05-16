@@ -14,6 +14,7 @@ export class DataState {
   private readonly preventTypes: PreventTypesValue;
   private readonly recursiveOnlyProps: boolean;
   private readonly recursivePreventProps: boolean;
+  private readonly dateFormat: string = 'Y-m-d H:i:s';
   public isChanged: boolean;
 
   constructor(data: LktObject, config: DataStateConfig = {}) {
@@ -24,12 +25,14 @@ export class DataState {
     this.recursiveOnlyProps = typeof config.recursiveOnlyProps === 'boolean' ? config.recursiveOnlyProps : true;
     this.recursivePreventProps = typeof config.recursivePreventProps === 'boolean' ? config.recursivePreventProps : true;
 
+    if (typeof config.dateFormat === 'string') this.dateFormat = config.dateFormat;
+
     data = {...data};
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue({...data});
-    this.original = new DataValue({...data});
+    this.data = new DataValue({...data}, {dateFormat: this.dateFormat});
+    this.original = new DataValue({...data}, {dateFormat: this.dateFormat});
     this.isChanged = this.changed();
   }
 
@@ -38,7 +41,7 @@ export class DataState {
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue(data);
+    this.data = new DataValue(data, {dateFormat: this.dateFormat});
     this.isChanged = this.changed();
     return this;
   }
@@ -48,15 +51,15 @@ export class DataState {
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue(data);
+    this.data = new DataValue(data, {dateFormat: this.dateFormat});
     this.isChanged = this.changed();
     return this;
   }
 
   turnStoredIntoOriginal() {
     const data = this.getData();
-    this.data = new DataValue({...data});
-    this.original = new DataValue({...data});
+    this.data = new DataValue({...data}, {dateFormat: this.dateFormat});
+    this.original = new DataValue({...data}, {dateFormat: this.dateFormat});
     this.isChanged = this.changed();
     return this;
   }

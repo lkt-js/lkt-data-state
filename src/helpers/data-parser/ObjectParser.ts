@@ -2,12 +2,15 @@ import { sortObjectProperties } from 'lkt-object-tools';
 import { LktObject } from 'lkt-ts-interfaces';
 
 import { DatumParser } from './DatumParser';
+import { ParserConfig } from '../../types/ParserConfig.ts';
 
 export class ObjectParser {
   private readonly value: LktObject;
+  private readonly config: ParserConfig;
 
-  constructor(value: LktObject) {
+  constructor(value: LktObject, config: ParserConfig = {}) {
     this.value = { ...value };
+    this.config = config
   }
 
   parse() {
@@ -20,7 +23,7 @@ export class ObjectParser {
     let r: LktObject = {};
     keys.forEach((key) => {
       try {
-        r[key] = new DatumParser(this.value[key]).parse();
+        r[key] = new DatumParser(this.value[key], this.config).parse();
       } catch (e) {
         // nothing to do here
       }

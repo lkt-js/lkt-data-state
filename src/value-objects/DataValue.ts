@@ -2,17 +2,18 @@ import { LktObject } from 'lkt-ts-interfaces';
 
 import { ObjectParser } from '../helpers/data-parser/ObjectParser';
 import { DataDifferences } from '../types/DataDifferences';
+import { ParserConfig } from '../types/ParserConfig.ts';
 
 export class DataValue {
     private readonly value: string;
     private readonly data: LktObject;
+    private readonly config: ParserConfig;
 
-    constructor(value?: LktObject) {
-        if (!value) {
-            value = {};
-        }
+    constructor(value?: LktObject, config: ParserConfig = {}) {
+        if (!value) value = {};
 
-        value = new ObjectParser(value).parse();
+        this.config = config;
+        value = new ObjectParser(value, this.config).parse();
         this.data = value;
         this.value = JSON.stringify(value);
     }

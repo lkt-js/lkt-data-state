@@ -16,17 +16,19 @@ var InvalidDatumError = class extends Error {
 // src/helpers/data-parser/ArrayParser.ts
 var ArrayParser = class {
   value;
-  constructor(value) {
+  config;
+  constructor(value, config = {}) {
     if (!Array.isArray(value)) {
       value = [];
     }
     this.value = value;
+    this.config = config;
   }
   parse() {
     const tmp = [];
     this.value.forEach((z) => {
       try {
-        tmp.push(new DatumParser(z).parse());
+        tmp.push(new DatumParser(z, this.config).parse());
       } catch (e) {
       }
     });
@@ -37,24 +39,26 @@ var ArrayParser = class {
 // src/helpers/data-parser/DatumParser.ts
 var DatumParser = class {
   value;
-  constructor(value) {
+  config;
+  constructor(value, config = {}) {
     this.value = value;
+    this.config = config;
   }
   parse() {
     if (this.value === null) {
       return null;
     }
     if (isDate(this.value) && !isNaN(this.value.valueOf())) {
-      return date("Y-m-d H:i:s", this.value);
+      return date(this.config?.dateFormat ?? "Y-m-d H:i:s", this.value);
     }
     if (Array.isArray(this.value)) {
       try {
-        return new ArrayParser(this.value).parse();
+        return new ArrayParser(this.value, this.config).parse();
       } catch (e) {
       }
     }
     if (typeof this.value === "object") {
-      return new ObjectParser(this.value).parse();
+      return new ObjectParser(this.value, this.config).parse();
     }
     if (typeof this.value === "number") {
       return String(this.value);
@@ -72,8 +76,10 @@ var DatumParser = class {
 // src/helpers/data-parser/ObjectParser.ts
 var ObjectParser = class {
   value;
-  constructor(value) {
+  config;
+  constructor(value, config = {}) {
     this.value = { ...value };
+    this.config = config;
   }
   parse() {
     if (!this.value) {
@@ -83,7 +89,7 @@ var ObjectParser = class {
     let r = {};
     keys.forEach((key) => {
       try {
-        r[key] = new DatumParser(this.value[key]).parse();
+        r[key] = new DatumParser(this.value[key], this.config).parse();
       } catch (e) {
       }
     });
@@ -96,11 +102,11 @@ var ObjectParser = class {
 var DataValue = class {
   value;
   data;
-  constructor(value) {
-    if (!value) {
-      value = {};
-    }
-    value = new ObjectParser(value).parse();
+  config;
+  constructor(value, config = {}) {
+    if (!value) value = {};
+    this.config = config;
+    value = new ObjectParser(value, this.config).parse();
     this.data = value;
     this.value = JSON.stringify(value);
   }
@@ -398,6 +404,7 @@ var DataState = class {
   preventTypes;
   recursiveOnlyProps;
   recursivePreventProps;
+  dateFormat = "Y-m-d H:i:s";
   isChanged;
   constructor(data, config = {}) {
     this.onlyProps = new OnlyPropsValue(config.onlyProps);
@@ -405,12 +412,13 @@ var DataState = class {
     this.preventTypes = new PreventTypesValue(config.preventTypes);
     this.recursiveOnlyProps = typeof config.recursiveOnlyProps === "boolean" ? config.recursiveOnlyProps : true;
     this.recursivePreventProps = typeof config.recursivePreventProps === "boolean" ? config.recursivePreventProps : true;
+    if (typeof config.dateFormat === "string") this.dateFormat = config.dateFormat;
     data = { ...data };
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue({ ...data });
-    this.original = new DataValue({ ...data });
+    this.data = new DataValue({ ...data }, { dateFormat: this.dateFormat });
+    this.original = new DataValue({ ...data }, { dateFormat: this.dateFormat });
     this.isChanged = this.changed();
   }
   store(data) {
@@ -418,7 +426,7 @@ var DataState = class {
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue(data);
+    this.data = new DataValue(data, { dateFormat: this.dateFormat });
     this.isChanged = this.changed();
     return this;
   }
@@ -427,14 +435,14 @@ var DataState = class {
     data = this.onlyProps.clear(data, this.recursiveOnlyProps);
     data = this.preventProps.clear(data, this.recursivePreventProps);
     data = this.preventTypes.clear(data);
-    this.data = new DataValue(data);
+    this.data = new DataValue(data, { dateFormat: this.dateFormat });
     this.isChanged = this.changed();
     return this;
   }
   turnStoredIntoOriginal() {
     const data = this.getData();
-    this.data = new DataValue({ ...data });
-    this.original = new DataValue({ ...data });
+    this.data = new DataValue({ ...data }, { dateFormat: this.dateFormat });
+    this.original = new DataValue({ ...data }, { dateFormat: this.dateFormat });
     this.isChanged = this.changed();
     return this;
   }

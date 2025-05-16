@@ -13,6 +13,7 @@ interface DataStateConfig {
     preventTypes?: PreventType[];
     recursiveOnlyProps?: boolean;
     recursivePreventProps?: boolean;
+    dateFormat?: string;
 }
 
 declare class DataState {
@@ -23,6 +24,7 @@ declare class DataState {
     private readonly preventTypes;
     private readonly recursiveOnlyProps;
     private readonly recursivePreventProps;
+    private readonly dateFormat;
     isChanged: boolean;
     constructor(data: LktObject, config?: DataStateConfig);
     store(data: LktObject): this;

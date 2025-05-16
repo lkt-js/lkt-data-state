@@ -6,4 +6,5 @@ export interface DataStateConfig {
   preventTypes?: PreventType[]
   recursiveOnlyProps?: boolean
   recursivePreventProps?: boolean
+  dateFormat?: string
 }

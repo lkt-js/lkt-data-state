@@ -127,6 +127,23 @@ var DataValue = class {
     if (typeof original !== "object" || typeof compared !== "object") {
       return { from, to };
     }
+    if (typeof original === "undefined" || original === null || typeof compared === "undefined" || compared === null) {
+      return { from: original, to: compared };
+    }
+    if (Array.isArray(original) && Array.isArray(compared)) {
+      if (original.length === 0 && compared.length === 0) {
+        return { from: [], to: [] };
+      }
+      let filteredALength = original.filter((value) => !compared.includes(value)).length, filteredBLength = compared.filter((value) => !original.includes(value)).length;
+      if (filteredALength > 0 || filteredBLength > 0) {
+        return { from: original, to: compared };
+      }
+      return { from: [], to: [] };
+    } else if (Array.isArray(original) && !Array.isArray(to)) {
+      return { from: original, to: compared };
+    } else if (!Array.isArray(original) && Array.isArray(to)) {
+      return { from: original, to: compared };
+    }
     const fromKeys = Object.keys(original);
     const toKeys = Object.keys(compared);
     let allKeys = [...fromKeys, ...toKeys];

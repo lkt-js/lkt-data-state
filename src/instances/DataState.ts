@@ -22,8 +22,8 @@ export class DataState {
     this.preventProps = new PreventPropsValue(config.preventProps);
     this.preventTypes = new PreventTypesValue(config.preventTypes);
 
-    this.recursiveOnlyProps = typeof config.recursiveOnlyProps === 'boolean' ? config.recursiveOnlyProps : true;
-    this.recursivePreventProps = typeof config.recursivePreventProps === 'boolean' ? config.recursivePreventProps : true;
+    this.recursiveOnlyProps = typeof config.recursiveOnlyProps === 'boolean' ? config.recursiveOnlyProps : false;
+    this.recursivePreventProps = typeof config.recursivePreventProps === 'boolean' ? config.recursivePreventProps : false;
 
     if (typeof config.dateFormat === 'string') this.dateFormat = config.dateFormat;
 
